@@ -34,7 +34,7 @@ def decrypt(match, encrypted):
             decrypted += char
     return decrypted
 
-def hack_bigrams(frequency, encrypted):
+def hack_bigrams(frequency, encrypted, iterations):
     encrypted_frequency = {}
     amount = 0
     for i in range(len(encrypted)):
@@ -69,7 +69,7 @@ def hack_bigrams(frequency, encrypted):
     for j in range(length):
         best_match[lc.ntl(j)] = lc.ntl(shuffled[j])
     #за одну итерацию рандомно меняем две буквы и смотрим, стало ли правдопобнее или нет, если да то оставляем
-    for i in range(10000):
+    for i in range(iterations):
         first = random.randrange(0, length)
         second = random.randrange(0, length)
         while second == first:
@@ -117,6 +117,7 @@ def hack_bigrams(frequency, encrypted):
 name = input("File to hack: ")
 name_output = input("File to save result: ")
 name_frequency = input("File with dictionary of frequency: ")
+iterations = int(input("Number of iterations (more iterations -> better accuracy): "))
 file = open(name, 'r', encoding="utf-8")
 encrypted = file.read()
 frequency_file = open(name_frequency, 'r', encoding="utf-8")
@@ -126,7 +127,7 @@ i = 0
 while i < len(text):
     frequency[text[i]] = float(text[i + 1])
     i = i + 2
-decrypted = hack_bigrams(frequency, encrypted)
+decrypted = hack_bigrams(frequency, encrypted, iterations)
 file_write = open(name_output, 'w',  encoding="utf-8")
 file_write.write(decrypted)
 file_write.close()
